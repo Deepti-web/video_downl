@@ -3,10 +3,35 @@
 <head>
     <title>YouTube Video Downloader</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .container { width: 300px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        .input-field { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; }
-        .button { width: 100%; padding: 10px; background-color: #4CAF50; color: #fff; border: none; border-radius: 10px; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -21,21 +46,16 @@
         function downloadVideo() {
             var videoUrl = document.getElementById("video-url").value;
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:5000/download", true);  // Explicitly target Flask server
+            xhr.open("POST", "/download", true);
             xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(JSON.stringify({videoUrl: videoUrl}));
             xhr.onload = function() {
-                const response = JSON.parse(xhr.responseText);
-                const statusEl = document.getElementById("status");
                 if (xhr.status === 200) {
-                    statusEl.innerHTML = response.message;
+                    document.getElementById("status").innerHTML = "Video downloaded successfully!";
                 } else {
-                    statusEl.innerHTML = "Error: " + (response.error || "Unknown error");
+                    document.getElementById("status").innerHTML = "Error downloading video.";
                 }
             };
-            xhr.onerror = function() {
-                document.getElementById("status").innerHTML = "Network error: Is the server running?";
-            };
-            xhr.send(JSON.stringify({videoUrl: videoUrl}));
         }
     </script>
 </body>
